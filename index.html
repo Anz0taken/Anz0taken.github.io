@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Change Giving Game</title>
+  <link rel="stylesheet" type="text/css" href="style.css">
+  <link rel="stylesheet" type="text/css" href="calcolatrice.css">
+</head>
+<body>
+    <div class="resto">
+        Costo acquisto: <span id="costo-value">0</span>
+    </div>
+    <div class="main_c">
+        <h1 style="text-align: center;">Disporre resto</h1>
+        <div class="banknote-buttons">
+            <div class="banknote-button" onclick="selectBanknote(this)">
+                <div class="number-circle">0</div>
+                <img src="./img/banconota100.png" alt="100 Euro">
+                <span class="button-label">100 €</span>
+            </div>
+            <div class="banknote-button" onclick="selectBanknote(this)">
+                <div class="number-circle">0</div>
+                <img src="./img/banconota50.png" alt="50 Euro">
+                <span class="button-label">50 €</span>
+            </div>
+            <div class="banknote-button" onclick="selectBanknote(this)">
+                <div class="number-circle">0</div>
+                <img src="./img/banconota20.png" alt="20 Euro">
+                <span class="button-label">20 €</span>
+            </div>
+            <div class="banknote-button" onclick="selectBanknote(this)">
+                <div class="number-circle">0</div>
+                <img src="./img/banconota10.png" alt="10 Euro">
+                <span class="button-label">10 €</span>
+            </div>
+            <div class="banknote-button" onclick="selectBanknote(this)">
+                <div class="number-circle">0</div>
+                <img src="./img/banconota5.png" alt="5 Euro">
+                <span class="button-label">5 €</span>
+            </div>
+            <div class="banknote-button" style="width: 23%;"onclick="selectBanknote(this)">
+                <div class="number-circle">0</div>
+                <img src="./img/banconota2.png" style="width: 50px;" alt="2 Euro">
+                <span class="button-label">2 €</span>
+            </div>
+            <div class="banknote-button" style="width: 23%;"onclick="selectBanknote(this)">
+                <div class="number-circle">0</div>
+                <img src="./img/banconota1.png" style="width: 50px;" alt="1 Euro">
+                <span class="button-label">1 €</span>
+            </div>
+            <div class="banknote-button" onclick="selectBanknote(this)">
+                <div class="number-circle">0</div>
+                <img src="./img/banconota050.png" alt="0.50 Euro">
+                <span class="button-label">0.50 €</span>
+            </div>
+            <div class="banknote-button" onclick="selectBanknote(this)">
+                <div class="number-circle">0</div>
+                <img src="./img/banconota020.png" alt="0.20 Euro">
+                <span class="button-label">0.20 €</span>
+            </div>
+            <div class="banknote-button" onclick="selectBanknote(this)">
+                <div class="number-circle">0</div>
+                <img src="./img/banconota020.png" alt="0.20 Euro">
+                <span class="button-label">0.10 €</span>
+            </div>
+            <div class="banknote-button" onclick="selectBanknote(this)">
+                <div class="number-circle">0</div>
+                <img src="./img/banconota005.png" alt="0.20 Euro">
+                <span class="button-label">0.05 €</span>
+            </div>
+            <div class="banknote-button" onclick="calculateTotal()">
+                <span class="button-label">Verifica resto</span>
+            </div>
+            <div class="banknote-button" onclick="resetCounters()">
+                <span class="button-label">Resetta resto</span>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal-overlay" id="modalOverlay" style="z-index: 20;">
+        <div class="modal">
+            <div class="modal-header">
+                <h2 class="modal-title">Esito</h2>
+                <button class="close-button" onclick="closeModal()">&times;</button>
+            </div>
+            <div class="modal-content">
+                <p id="messaggio_modal"></p>
+            </div>
+        </div>
+    </div>
+
+</body>
+</html>
+<script src="./js/const.js"></script>
+<script src="./js/functions.js"></script>
+<script src="./js/script.js"></script>
+<script src="./js/calcolatrice.js"></script>
