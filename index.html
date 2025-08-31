@@ -1,98 +1,152 @@
-<!DOCTYPE html>
-<html lang="en">
+<!doctype html>
+<html lang="it">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Change Giving Game</title>
-  <link rel="stylesheet" type="text/css" href="style.css">
-  <link rel="stylesheet" type="text/css" href="calcolatrice.css">
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Codenames personalizzato — sessione regalo</title>
+  <style>
+    :root{
+      --bg:#0f1724; --card:#f8fafc; --accent:#0ea5a4; --green:#16a34a; --grey:#94a3b8; --card-radius:12px;
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
+    }
+    body{margin:0;background:linear-gradient(180deg,#071627 0%,#081129 100%);color:var(--card);display:flex;flex-direction:column;align-items:center;min-height:100vh;padding:20px}
+    .board{max-width:920px;width:100%;display:flex;flex-direction:column;align-items:center}
+    header{display:flex;align-items:center;justify-content:space-between;margin-bottom:18px;width:100%}
+    h1{font-size:20px;margin:0;color:var(--card)}
+    .controls{display:flex;gap:8px;align-items:center}
+    button{background:transparent;border:1px solid rgba(255,255,255,0.06);color:var(--card);padding:8px 12px;border-radius:10px;cursor:pointer}
+
+    .grid{display:grid;grid-template-columns:repeat(5,1fr);gap:12px;margin-top:18px;width:100%}
+    .card{background:var(--card);color:#0b1220;border-radius:var(--card-radius);min-height:86px;display:flex;align-items:center;justify-content:center;padding:10px;text-align:center;font-weight:700;cursor:pointer;user-select:none;box-shadow:0 6px 18px rgba(2,6,23,0.6);transition:transform .12s,box-shadow .12s}
+    .card:active{transform:translateY(2px);box-shadow:0 3px 8px rgba(2,6,23,0.6)}
+    .card.revealed.green{background:linear-gradient(180deg, #bbf7d0, #86efac);color:#05320b}
+    .card.revealed.grey{background:linear-gradient(180deg,#a7a7a7,#8b8b8b);color:#0b1220}
+    .word{font-size:18px;letter-spacing:.4px}
+
+    .status{margin-top:14px;color:rgba(255,255,255,0.85);font-size:14px;text-align:center}
+
+    .clue-container{margin-top:24px;display:flex;justify-content:center;width:100%}
+    .clue{background:linear-gradient(90deg, rgba(14,165,164,0.2), rgba(14,165,164,0.1));padding:14px 20px;border-radius:14px;display:inline-block;text-align:center;box-shadow:0 4px 12px rgba(2,6,23,0.5)}
+    .hint{font-weight:800;font-size:22px;color:var(--accent);}
+    .hint small{display:block;font-weight:600;font-size:14px;opacity:0.9;margin-top:6px;color:var(--card)}
+
+    .overlay{position:fixed;inset:0;display:flex;align-items:center;justify-content:center;background:rgba(3,7,18,0.6);backdrop-filter:blur(4px);visibility:hidden;opacity:0;transition:opacity .18s,visibility .18s}
+    .overlay.show{visibility:visible;opacity:1}
+    .modal{background:linear-gradient(180deg,#ffffff,#f1f5f9);padding:28px;border-radius:14px;color:#052233;min-width:260px;text-align:center;box-shadow:0 8px 40px rgba(2,6,23,0.6)}
+    .modal h2{margin:0 0 8px 0}
+    .modal p{margin:0 0 16px 0;color:#123}
+
+    footer{margin-top:18px;color:rgba(255,255,255,0.6);font-size:12px;text-align:center}
+
+    @media (max-width:640px){
+      .grid{grid-template-columns:repeat(3,1fr);}
+      .card{min-height:68px}
+      .word{font-size:15px}
+      .hint{font-size:18px}
+    }
+    @media (max-width:400px){
+      .grid{grid-template-columns:repeat(2,1fr);}
+    }
+  </style>
 </head>
 <body>
-    <div class="resto">
-        Costo acquisto: <span id="costo-value">0</span>
-    </div>
-    <div class="main_c">
-        <h1 style="text-align: center;">Disporre resto</h1>
-        <div class="banknote-buttons">
-            <div class="banknote-button" onclick="selectBanknote(this)">
-                <div class="number-circle">0</div>
-                <img src="./img/banconota100.png" alt="100 Euro">
-                <span class="button-label">100 €</span>
-            </div>
-            <div class="banknote-button" onclick="selectBanknote(this)">
-                <div class="number-circle">0</div>
-                <img src="./img/banconota50.png" alt="50 Euro">
-                <span class="button-label">50 €</span>
-            </div>
-            <div class="banknote-button" onclick="selectBanknote(this)">
-                <div class="number-circle">0</div>
-                <img src="./img/banconota20.png" alt="20 Euro">
-                <span class="button-label">20 €</span>
-            </div>
-            <div class="banknote-button" onclick="selectBanknote(this)">
-                <div class="number-circle">0</div>
-                <img src="./img/banconota10.png" alt="10 Euro">
-                <span class="button-label">10 €</span>
-            </div>
-            <div class="banknote-button" onclick="selectBanknote(this)">
-                <div class="number-circle">0</div>
-                <img src="./img/banconota5.png" alt="5 Euro">
-                <span class="button-label">5 €</span>
-            </div>
-            <div class="banknote-button" style="width: 23%;"onclick="selectBanknote(this)">
-                <div class="number-circle">0</div>
-                <img src="./img/banconota2.png" style="width: 50px;" alt="2 Euro">
-                <span class="button-label">2 €</span>
-            </div>
-            <div class="banknote-button" style="width: 23%;"onclick="selectBanknote(this)">
-                <div class="number-circle">0</div>
-                <img src="./img/banconota1.png" style="width: 50px;" alt="1 Euro">
-                <span class="button-label">1 €</span>
-            </div>
-            <div class="banknote-button" onclick="selectBanknote(this)">
-                <div class="number-circle">0</div>
-                <img src="./img/banconota050.png" alt="0.50 Euro">
-                <span class="button-label">0.50 €</span>
-            </div>
-            <div class="banknote-button" onclick="selectBanknote(this)">
-                <div class="number-circle">0</div>
-                <img src="./img/banconota020.png" alt="0.20 Euro">
-                <span class="button-label">0.20 €</span>
-            </div>
-            <div class="banknote-button" onclick="selectBanknote(this)">
-                <div class="number-circle">0</div>
-                <img src="./img/banconota020.png" alt="0.20 Euro">
-                <span class="button-label">0.10 €</span>
-            </div>
-            <div class="banknote-button" onclick="selectBanknote(this)">
-                <div class="number-circle">0</div>
-                <img src="./img/banconota005.png" alt="0.20 Euro">
-                <span class="button-label">0.05 €</span>
-            </div>
-            <div class="banknote-button" onclick="calculateTotal()">
-                <span class="button-label">Verifica resto</span>
-            </div>
-            <div class="banknote-button" onclick="resetCounters()">
-                <span class="button-label">Resetta resto</span>
-            </div>
-        </div>
+  <div class="board">
+    <header>
+      <h1>Regalo per beatrice</h1>
+      <div class="controls">
+        <button id="resetBtn">Reset</button>
+      </div>
+    </header>
+
+    <div class="grid" id="grid"></div>
+    <div class="status" id="status">Carte verdi trovate: <span id="found">0</span> / <span id="totalGreen">0</span></div>
+
+    <div class="clue-container">
+      <div class="clue">
+        <div class="hint"><span id="clueWord">MONDO</span> <small>(<span id="clueNum">3</span>)</small></div>
+      </div>
     </div>
 
-    <div class="modal-overlay" id="modalOverlay" style="z-index: 20;">
-        <div class="modal">
-            <div class="modal-header">
-                <h2 class="modal-title">Esito</h2>
-                <button class="close-button" onclick="closeModal()">&times;</button>
-            </div>
-            <div class="modal-content">
-                <p id="messaggio_modal"></p>
-            </div>
-        </div>
-    </div>
+    <footer>Nota: parole e disposizione sono hard-coded per questa sessione. Nessuna carta nera. Clicca per scoprire.</footer>
+  </div>
 
+  <div class="overlay" id="overlay">
+    <div class="modal">
+      <h2>Sei pronta?</h2>
+      <p>Andiamo a DISNEY TERRA PARIGI.🎉</p>
+      <button id="closeOverlay">Chiudi</button>
+    </div>
+  </div>
+
+  <script>
+
+    const words = [
+    'DRAGO','SCIENZA','BANCHIERE','VETRO','RE',
+    'ROBOT','FUMO','SCACCO','FRECCIA','SCUOLA',
+    'POLVERE','CIRCO','SEGRETO','PARIGI','DISNEY',
+    'TERRA','FORCHETTA','BOTTONE','CHIAVE','CARTA',
+    'OCCHIO','LAMPADA','MARMELLATA','SOGNO','PIANO'
+    ];
+
+    const greenWords = ['DISNEY','TERRA','PARIGI'];
+
+    const gridEl = document.getElementById('grid');
+    const foundEl = document.getElementById('found');
+    const totalGreenEl = document.getElementById('totalGreen');
+    const overlay = document.getElementById('overlay');
+    const resetBtn = document.getElementById('resetBtn');
+    const closeOverlay = document.getElementById('closeOverlay');
+
+    let foundCount = 0;
+    const totalGreen = greenWords.length;
+    totalGreenEl.textContent = totalGreen;
+
+    function createCard(word){
+      const div = document.createElement('div');
+      div.className = 'card';
+      div.setAttribute('data-word', word);
+      const isGreen = greenWords.includes(word);
+      div.setAttribute('data-color', isGreen ? 'green' : 'grey');
+      div.innerHTML = `<div class="word">${word}</div>`;
+
+      div.addEventListener('click', function handler(e){
+        if(div.classList.contains('revealed')) return;
+        div.classList.add('revealed', isGreen ? 'green' : 'grey');
+        if(isGreen){
+          foundCount += 1;
+          foundEl.textContent = foundCount;
+          if(foundCount >= totalGreen) showFinish();
+        }
+      });
+
+      return div;
+    }
+
+    function shuffle(a){
+      for(let i=a.length-1;i>0;i--){
+        const j=Math.floor(Math.random()*(i+1)); [a[i],a[j]]=[a[j],a[i]];
+      }
+      return a;
+    }
+
+    function buildBoard(){
+      gridEl.innerHTML='';
+      const layout = shuffle([...words]);
+      layout.forEach(w=>gridEl.appendChild(createCard(w)));
+      foundCount = 0; foundEl.textContent = '0';
+    }
+
+    function showFinish(){
+      overlay.classList.add('show');
+    }
+
+    resetBtn.addEventListener('click', ()=>{
+      buildBoard();
+      overlay.classList.remove('show');
+    });
+    closeOverlay.addEventListener('click', ()=>overlay.classList.remove('show'));
+
+    buildBoard();
+  </script>
 </body>
 </html>
-<script src="./js/const.js"></script>
-<script src="./js/functions.js"></script>
-<script src="./js/script.js"></script>
-<script src="./js/calcolatrice.js"></script>
